@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="15dp"
+              android:textSize="25dp"
+              android:layout_marginLeft="2dp"
+              android:layout_marginRight="2dp"
+              android:layout_marginTop="3dp"
+    android:background="@color/darkGray">
+
+    <TextView
+        android:id="@+id/expense_date"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:id="@+id/expense_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:textSize="25dp"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/expense_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:textSize="17dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/expense_type"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="30dp"/>
+
+</LinearLayout>

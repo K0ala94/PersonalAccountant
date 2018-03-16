@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#570000</color>
+    <color name="colorPrimaryDark">#060100</color>
+    <color name="colorAccent">#570000</color>
+    <color name="white">#ffffff </color>
+    <color name="monthItemBackground">#fffade</color>
+    <color name="black">#000</color>
+    <color name="darkGray">#0e1114</color>
+    <color name="midGray">#25292d</color>
+</resources>
