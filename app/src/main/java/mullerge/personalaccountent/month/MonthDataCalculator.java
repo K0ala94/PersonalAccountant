@@ -9,10 +9,9 @@ import mullerge.personalaccountent.util.CurrencyLoader;
 
 public class MonthDataCalculator {
 
-    public static double calculateSum(Month month, CurrencyLoader loader){
+    public static double calculateSum(List<Expense> allExpensesInMonth, CurrencyLoader loader){
         double sum = 0;
 
-        List<Expense> allExpensesInMonth = Expense.find(Expense.class, "month = ?",  String.valueOf(month.getId()));
         for (Expense e: allExpensesInMonth) {
             sum += CurrencyCalculator.getAmountInHUF(e.getCurrency(), e.getAmount(), loader );
         }

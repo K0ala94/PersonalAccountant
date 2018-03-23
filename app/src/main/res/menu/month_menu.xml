@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_calculator"
+        android:orderInCategory="90"
+        android:icon="@drawable/calculator"
+        app:showAsAction="ifRoom"
+        android:title="Calculator"
+        />
+
+    <item
+        android:id="@+id/action_exchangerates"
+        android:orderInCategory="100"
+        android:icon="@drawable/currency_icon"
+        app:showAsAction="ifRoom"
+        android:title="Exchange rates"
+        />
+
+</menu>

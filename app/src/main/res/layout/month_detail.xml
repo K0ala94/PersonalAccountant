@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/month_detail_layout"
+              android:minWidth="300dp"
+              android:padding="10dp"
+              android:background="@color/darkGray">
+
+    <ImageButton
+        android:id="@+id/month_detail_close_X"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/close_icon_white"
+        android:layout_gravity="right"
+        />
+
+    <TextView
+        android:id="@+id/month_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"
+        style="@style/white_text"/>
+
+    <View
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="25dp"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15dp"
+            android:text="Expense sum: "
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="12dp"
+            style="@style/white_text"/>
+
+        <TextView
+           android:id="@+id/month_detail_sum"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:textSize="15dp"
+           style="@style/white_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15dp"
+            android:text="Income: "
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="12dp"
+            style="@style/white_text"/>
+
+        <TextView
+            android:id="@+id/month_income"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15dp"
+            style="@style/white_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15dp"
+            android:text="Savings: "
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="12dp"
+            style="@style/white_text"/>
+
+        <TextView
+            android:id="@+id/month_savings"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15dp"
+            style="@style/white_text"/>
+
+    </LinearLayout>
+
+
+    <!--<TextView
+        android:layout_margin="10dp"
+        android:id="@+id/month_detail_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="close"
+        android:layout_gravity="right"
+        style="@style/white_text"/>
+        -->
+</LinearLayout>

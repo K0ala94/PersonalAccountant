@@ -4,4 +4,5 @@
     <string name="nodetail">No details</string>
     <string name="api_key">51489afc1da53411f2ba16e2ca5767b4</string>
     <string name="base_url">http://data.fixer.io/api/</string>
+    <string name="er_title">Current exchange rates</string>
 </resources>

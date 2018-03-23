@@ -9,6 +9,5 @@
     tools:context="mullerge.personalaccountent.MainActivity"
     android:id="@+id/main_activity">
 
-    <include layout="@layout/content_main"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -11,7 +11,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import mullerge.personalaccountent.R;
@@ -28,7 +30,7 @@ public class CurrencyLoader {
     private static final long milisInADay = 1000*60*60*24;
 
     private Context context;
-    private List<Currency> loadedCurrencies;
+    private Map<String,Currency> loadedCurrencies;
     private static long lastCurrencyQuery = 0;
 
     private String baseURL;
@@ -39,8 +41,11 @@ public class CurrencyLoader {
 
     private CurrencyLoader(Context context){
         this.context = context;
-        loadedCurrencies = new ArrayList<>();
+        loadedCurrencies = new HashMap<>();
         baseURL = context.getResources().getString(R.string.base_url);
+
+        final SharedPreferences sp = context.getSharedPreferences("PERSONAL_ACCOUNTENT", Context.MODE_PRIVATE);
+        lastCurrencyQuery = sp.getLong("last_currency_query", 0);
 
         retrofit = new Retrofit.Builder().baseUrl(baseURL)
                 .client(new OkHttpClient.Builder().build())
@@ -59,15 +64,9 @@ public class CurrencyLoader {
         return instance;
     }
 
-    public CurrencyLoader(){};
 
     public Currency getCurrencyWithName(final String currencyName) throws Exception{
-        for (Currency c: loadedCurrencies) {
-            if (currencyName.equals(c.getCurrenyName())) {
-                return c;
-            }
-        }
-        throw new Exception();
+        return loadedCurrencies.get(currencyName);
     }
 
     public void loadCurrencies(){
@@ -91,38 +90,50 @@ public class CurrencyLoader {
                         double gbpInHuf = 1 /Double.parseDouble(ratesObj.getString(Currency.GBP)) *euroInHUF;
 
                         loadedCurrencies.clear();
-                        loadedCurrencies.add(new Currency(euroInHUF, Currency.EURO));
-                        loadedCurrencies.add(new Currency(1, Currency.HUF));
-                        loadedCurrencies.add(new Currency(usdInHuf , Currency.USD));
-                        loadedCurrencies.add(new Currency(gbpInHuf, Currency.GBP));
+                        loadedCurrencies.put(Currency.EURO,new Currency(euroInHUF, Currency.EURO));
+                        loadedCurrencies.put(Currency.HUF,new Currency(1, Currency.HUF));
+                        loadedCurrencies.put(Currency.USD,new Currency(usdInHuf , Currency.USD));
+                        loadedCurrencies.put(Currency.GBP,new Currency(gbpInHuf, Currency.GBP));
 
                         sp.edit().putFloat(Currency.EURO, 311.8F).apply();
                         sp.edit().putFloat(Currency.USD, 252.8F).apply();
                         sp.edit().putFloat(Currency.GBP, 351.1F).apply();
 
                         lastCurrencyQuery = new Date().getTime();
+                        sp.edit().putLong("last_currency_query", lastCurrencyQuery).apply();
 
                         System.out.println("EUR: " + euroInHUF + " GBP: " + gbpInHuf);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }finally {
+                        loadCurrenciesFromMemory();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                     Toast.makeText(context, "Network error", Toast.LENGTH_LONG);
+                    loadCurrenciesFromMemory();
                 }
             });
         }
         else {
-            loadedCurrencies.add(new Currency(1.0, Currency.HUF));
-            loadedCurrencies.add(new Currency(sp.getFloat(Currency.EURO, 0.0f), Currency.EURO));
-            loadedCurrencies.add(new Currency(sp.getFloat(Currency.USD, 0.0f), Currency.USD));
-            loadedCurrencies.add(new Currency(sp.getFloat(Currency.GBP, 0.0f), Currency.GBP));
+            loadCurrenciesFromMemory();
         }
     }
 
+    public void loadCurrenciesFromMemory(){
+        final SharedPreferences sp = context.getSharedPreferences("PERSONAL_ACCOUNTENT", Context.MODE_PRIVATE);
 
+        loadedCurrencies.put(Currency.HUF,new Currency(1.0, Currency.HUF));
+        loadedCurrencies.put(Currency.EURO,new Currency(sp.getFloat(Currency.EURO, 0.0f), Currency.EURO));
+        loadedCurrencies.put(Currency.USD,new Currency(sp.getFloat(Currency.USD, 0.0f), Currency.USD));
+        loadedCurrencies.put(Currency.GBP,new Currency(sp.getFloat(Currency.GBP, 0.0f), Currency.GBP));
+    }
+
+    public Map<String, Currency> getLoadedCurrencies() {
+        return loadedCurrencies;
+    }
 }

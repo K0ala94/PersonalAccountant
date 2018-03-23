@@ -15,8 +15,12 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mullerge.personalaccountent.R;
@@ -29,6 +33,9 @@ public class ExpenseFragment extends Fragment implements NewExpenseDialoge.NewEx
     private RecyclerView recyclerView;
     private ExpenseAdapater adapter;
     private Month selectedMonth;
+    private Spinner typeSpinner;
+
+    private List<Expense> allExpenses = new ArrayList<>();
 
     @Nullable
     @Override
@@ -65,7 +72,6 @@ public class ExpenseFragment extends Fragment implements NewExpenseDialoge.NewEx
             }
         });
 
-        calculateAndSetSum();
         setUpSwipe();
     }
 
@@ -73,7 +79,7 @@ public class ExpenseFragment extends Fragment implements NewExpenseDialoge.NewEx
         recyclerView = (RecyclerView) getView().findViewById(R.id.expense_recyclerView);
 
         adapter = new ExpenseAdapater();
-       selectedMonth = (Month) getArguments().getSerializable("selected_month");
+        selectedMonth = (Month) getArguments().getSerializable("selected_month");
 
         loadExpensesInBackGround();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -92,6 +98,9 @@ public class ExpenseFragment extends Fragment implements NewExpenseDialoge.NewEx
             protected void onPostExecute(List<Expense> expenses) {
                 super.onPostExecute(expenses);
                 adapter.updateList(expenses);
+                allExpenses = expenses;
+                calculateAndSetSum();
+                setSumTypeSpinner();
             }
         }.execute();
     }
@@ -100,8 +109,13 @@ public class ExpenseFragment extends Fragment implements NewExpenseDialoge.NewEx
     public void onNewExpenseListener(Expense newExpense) {
         newExpense.setMonthOfExpense(selectedMonth);
         Expense.save(newExpense);
-        adapter.getExpenses().add(newExpense);
-        adapter.updateList();
+        if (newExpense.getType().equals(typeSpinner.getSelectedItem())) {
+            adapter.getExpenses().add(newExpense);
+            adapter.updateList();
+        }
+
+        allExpenses.add(newExpense);
+
         calculateAndSetSum();
     }
 
@@ -112,10 +126,9 @@ public class ExpenseFragment extends Fragment implements NewExpenseDialoge.NewEx
             @Override
             protected Void doInBackground(Void... params) {
                 selectedMonth = Month.findById(Month.class, selectedMonth.getId());
-                double sum =  MonthDataCalculator.calculateSum(selectedMonth,CurrencyLoader.getIntance(getContext()));
+                double sum =  MonthDataCalculator.calculateSum(adapter.getExpenses(),CurrencyLoader.getIntance(getContext()));
                 selectedMonth.setExpenseSum(new Double(sum).intValue());
                 Month.save(selectedMonth);
-
 
                 return null;
             }
@@ -150,6 +163,40 @@ public class ExpenseFragment extends Fragment implements NewExpenseDialoge.NewEx
         ItemTouchHelper touchHelper = new ItemTouchHelper(deleteCallBack);
         touchHelper.attachToRecyclerView(recyclerView);
     }
+
+    private void setSumTypeSpinner(){
+        typeSpinner = (Spinner) getView().findViewById(R.id.sum_type_spinner);
+        typeSpinner.setAdapter(new ArrayAdapter<>(getContext(),R.layout.sum_spinner_item, ExpenseType.SUM_TYPES.toArray()));
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                List<Expense> filteredExpenses = new ArrayList<>();
+                String expType = ExpenseType.SUM_TYPES.get(position);
+
+                if(expType.equals("ALL")){
+                    adapter.updateList(allExpenses);
+                }
+                else {
+                    for(Expense e : allExpenses){
+                        if(e.getType().equals(expType)){
+                            filteredExpenses.add(e);
+                        }
+                    }
+                    adapter.updateList(filteredExpenses);
+                }
+
+                calculateAndSetSum();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    public List<Expense> getAllExpenses() {
+        return allExpenses;
+    }
+
 }
 
 

@@ -18,7 +18,7 @@ public class Month extends SugarRecord implements Serializable {
     private boolean modified = false;
 
     public String getMonthAsString(){
-        return new DateFormatSymbols().getMonths()[month-1];
+        return new DateFormatSymbols().getMonths()[month];
     }
 
     public int getYear() {
