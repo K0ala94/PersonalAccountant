@@ -77,7 +77,7 @@ public class NewExpenseDialoge extends AppCompatDialogFragment implements Dialog
             newExpense.setCurrency(currencySpinner.getSelectedItem().toString());
         }
 
-        newExpense.setDate(new Date());
+        newExpense.setDate(new Date().getTime());
 
         return  newExpense;
     }

@@ -39,6 +39,9 @@ import java.util.List;
 import java.util.Map;
 
 import mullerge.personalaccountent.R;
+import mullerge.personalaccountent.dalFireBase.ExpenseRepo;
+import mullerge.personalaccountent.dalFireBase.MonthRepo;
+import mullerge.personalaccountent.event.Event;
 import mullerge.personalaccountent.util.Currency;
 import mullerge.personalaccountent.util.CurrencyLoader;
 
@@ -46,6 +49,8 @@ public class MonthFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private MonthAdapter adapter;
+    private MonthRepo monthRepo = new MonthRepo();
+    private ExpenseRepo expenseRepo = new ExpenseRepo();
 
 
     @Nullable
@@ -70,8 +75,8 @@ public class MonthFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
          //toolbar.setTitle(null);
 
-
         initRecycleView();
+
         setUpSwipe();
 
         //NEM MUKODIK
@@ -92,14 +97,16 @@ public class MonthFragment extends Fragment {
                 Month newMonth = new Month();
                 Calendar now = Calendar.getInstance();
                 now.setTime(new Date());
-                newMonth.setMonth(now.get(Calendar.MONTH));
+                newMonth.setMonth(now.get(Calendar.MONTH)-1);
                 newMonth.setYear(now.get(Calendar.YEAR));
                 newMonth.setIncome(450000);
+                newMonth.setLabel("Teszt");
 
-                Month.save(newMonth);
-                adapter.addMonth(newMonth);
-            }
-        });
+                monthRepo.saveMonth(newMonth);
+                expenseRepo.saveMonth(newMonth);
+
+    }
+});
     }
 
     @Override
@@ -133,19 +140,7 @@ public class MonthFragment extends Fragment {
     }
 
     private void loadMonthsInBackGround(){
-        new AsyncTask<Void, Void, List<Month>>(){
-
-            @Override
-            protected List<Month> doInBackground(Void... params) {
-                return Month.listAll(Month.class);
-            }
-
-            @Override
-            protected void onPostExecute(List<Month> months) {
-                super.onPostExecute(months);
-                adapter.updateList(months);
-            }
-        }.execute();
+        monthRepo.loadMonths(adapter);
     }
 
     private void setUpSwipe() {
@@ -160,7 +155,8 @@ public class MonthFragment extends Fragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
 
-                adapter.removeMonth(position);
+                Month deletedMonth = adapter.getMonths().get(position);
+                monthRepo.deleteMonth(deletedMonth);
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(deleteCallBack);

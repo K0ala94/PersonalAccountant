@@ -9,17 +9,17 @@ import mullerge.personalaccountent.util.CurrencyLoader;
 
 public class MonthDataCalculator {
 
-    public static double calculateSum(List<Expense> allExpensesInMonth, CurrencyLoader loader){
-        double sum = 0;
+    public double calculateSum(List<Expense> allExpensesInMonth, CurrencyLoader loader){
+            double sum = 0;
 
-        for (Expense e: allExpensesInMonth) {
-            sum += CurrencyCalculator.getAmountInHUF(e.getCurrency(), e.getAmount(), loader );
-        }
+            for (Expense e : allExpensesInMonth) {
+                sum += CurrencyCalculator.getAmountInHUF(e.getCurrency(), e.getAmount(), loader);
+            }
 
-        return sum;
+            return sum;
     }
 
-    public static int calculateSavings(Month month){
+    public  int calculateSavings(Month month){
 
         return month.getIncome() - month.getExpenseSum();
     }

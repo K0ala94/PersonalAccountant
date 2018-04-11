@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CurrencyLoader {
 
-    private static final long milisInADay = 1000*60*60*24;
+    private final long milisInADay = 1000*60*60*24;
 
     private Context context;
     private Map<String,Currency> loadedCurrencies;
@@ -72,8 +72,9 @@ public class CurrencyLoader {
     public void loadCurrencies(){
 
         final SharedPreferences sp = context.getSharedPreferences("PERSONAL_ACCOUNTENT", Context.MODE_PRIVATE);
+        long timeSinceLastQuery = (new Date()).getTime() - lastCurrencyQuery;
 
-        if((new Date().getTime() - lastCurrencyQuery) > milisInADay ){
+        if(timeSinceLastQuery > milisInADay ){
 
             Call<ResponseBody> result = currencyAPI.getCurrencyValues();
             result.enqueue(new Callback<ResponseBody>() {
@@ -95,9 +96,9 @@ public class CurrencyLoader {
                         loadedCurrencies.put(Currency.USD,new Currency(usdInHuf , Currency.USD));
                         loadedCurrencies.put(Currency.GBP,new Currency(gbpInHuf, Currency.GBP));
 
-                        sp.edit().putFloat(Currency.EURO, 311.8F).apply();
-                        sp.edit().putFloat(Currency.USD, 252.8F).apply();
-                        sp.edit().putFloat(Currency.GBP, 351.1F).apply();
+                        sp.edit().putFloat(Currency.EURO, (float)euroInHUF).apply();
+                        sp.edit().putFloat(Currency.USD, (float)usdInHuf).apply();
+                        sp.edit().putFloat(Currency.GBP,(float)gbpInHuf).apply();
 
                         lastCurrencyQuery = new Date().getTime();
                         sp.edit().putLong("last_currency_query", lastCurrencyQuery).apply();

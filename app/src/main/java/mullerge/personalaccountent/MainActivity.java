@@ -40,26 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         CurrencyLoader.getIntance(this).loadCurrencies();
 
-        scheduleNewMonthBroadcast();
-    }
-
-    public void scheduleNewMonthBroadcast(){
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(this,NewMonthReciever.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(this,0,intent,0);
-
-        Calendar firstDayOfMonth = Calendar.getInstance();
-        firstDayOfMonth.setTimeInMillis(System.currentTimeMillis());
-        firstDayOfMonth.set(Calendar.MONTH,3);
-        firstDayOfMonth.set(Calendar.DAY_OF_MONTH, 0);
-        firstDayOfMonth.set(Calendar.HOUR_OF_DAY, 0);
-
-        alarmManager.setInexactRepeating(AlarmManager.RTC,firstDayOfMonth.getTimeInMillis(),
-                                         AlarmManager.INTERVAL_DAY,pIntent);
-
-        //alarmManager.setRepeating(AlarmManager.RTC,System.currentTimeMillis(), 5000,pIntent);
-
     }
 
 

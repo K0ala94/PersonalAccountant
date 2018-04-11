@@ -10,6 +10,7 @@ public class ExpenseType {
 
     public static final List<String> TYPES = new ArrayList<>();
     public static final List<String> SUM_TYPES = new ArrayList<>();
+    public static final String ALL = "ALL";
 
     static{
         TYPES.add("FOOD");
@@ -19,8 +20,9 @@ public class ExpenseType {
         TYPES.add("CLOTHS");
         TYPES.add("BILLS");
         TYPES.add("HOME");
+        TYPES.add("PET");
 
-        SUM_TYPES.add("ALL");
+        SUM_TYPES.add(ALL);
         SUM_TYPES.addAll(TYPES);
     }
 

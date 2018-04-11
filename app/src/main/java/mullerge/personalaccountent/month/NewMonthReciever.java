@@ -1,6 +1,8 @@
 package mullerge.personalaccountent.month;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,14 +11,21 @@ import android.content.SharedPreferences;
 import java.util.Calendar;
 import java.util.List;
 
+import mullerge.personalaccountent.dalFireBase.ExpenseRepo;
+import mullerge.personalaccountent.dalFireBase.MonthRepo;
+
 public class NewMonthReciever extends BroadcastReceiver{
 
-    Context context;
+    private Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         this.context = context;
+
+        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
+            scheduleNewMonthBroadcast();
+        }
 
         Calendar currentDate = Calendar.getInstance();
         currentDate.setTimeInMillis(System.currentTimeMillis());
@@ -28,31 +37,39 @@ public class NewMonthReciever extends BroadcastReceiver{
 
 
     private void addNewMonth(){
-        final SharedPreferences sp = context.getSharedPreferences("PERSONAL_ACCOUNTENT", Context.MODE_PRIVATE);
-
-        List<Month> lastMonth =  Month.find(Month.class, null, null, null, "id DESC", "1");
+        MonthRepo monthRepo = new MonthRepo();
+        ExpenseRepo expenseRepo = new ExpenseRepo();
 
         Month newMonth = new Month();
 
-        if(lastMonth.size() == 0){
-            Calendar now = Calendar.getInstance();
-            now.setTimeInMillis(System.currentTimeMillis());
+        Calendar now = Calendar.getInstance();
+        now.setTimeInMillis(System.currentTimeMillis());
 
-            newMonth.setMonth(now.get(Calendar.MONTH));
-            newMonth.setYear(now.get(Calendar.YEAR));
-        }
-        else {
-            Month currentMonth = lastMonth.get(0);
-            if (currentMonth.getMonth() == 11) {
-                newMonth.setMonth(0);
-                newMonth.setYear(currentMonth.getYear() + 1);
-            } else {
-                newMonth.setMonth(currentMonth.getMonth() + 1);
-                newMonth.setYear(currentMonth.getYear());
-            }
-        }
+        newMonth.setMonth(now.get(Calendar.MONTH));
+        newMonth.setYear(now.get(Calendar.YEAR));
 
         newMonth.setIncome(450000);
-        Month.save(newMonth);
+
+        monthRepo.saveMonth(newMonth);
+        expenseRepo.saveMonth(newMonth);
+    }
+
+    public void scheduleNewMonthBroadcast(){
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(context,NewMonthReciever.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(context,0,intent,0);
+
+        Calendar firstDayOfMonth = Calendar.getInstance();
+        firstDayOfMonth.setTimeInMillis(System.currentTimeMillis());
+        firstDayOfMonth.set(Calendar.MONTH,3);
+        firstDayOfMonth.set(Calendar.DAY_OF_MONTH, 0);
+        firstDayOfMonth.set(Calendar.HOUR_OF_DAY, 0);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC,firstDayOfMonth.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,pIntent);
+
+        //alarmManager.setRepeating(AlarmManager.RTC,System.currentTimeMillis(), 5000,pIntent);
+
     }
 }

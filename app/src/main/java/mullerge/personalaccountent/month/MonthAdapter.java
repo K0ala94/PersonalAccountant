@@ -96,9 +96,9 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
         updateList();
     }
 
-    public void removeMonth(int pos){
-        Month deleted = months.remove(pos);
-        Month.delete(deleted);
+    public void removeMonth(Month deletedMonth){
+        months.remove(deletedMonth);
+        notifyDataSetChanged();
     }
 
     public PopupWindow getActivePopup() {
@@ -107,6 +107,10 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
 
     public void setActivePopup(PopupWindow activePopup) {
         this.activePopup = activePopup;
+    }
+
+    public List<Month> getMonths() {
+        return months;
     }
 
     public class MonthViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
@@ -143,7 +147,7 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
                 vibrator.vibrate(50);
             }
 
-            month.setSaving(MonthDataCalculator.calculateSavings(month));
+            month.setSaving(new MonthDataCalculator().calculateSavings(month));
 
             PopupWindow detailsWindow = createPopupWindow(v);
             //detailsWindow.showAtLocation(v, Gravity.CENTER, 0, 0);

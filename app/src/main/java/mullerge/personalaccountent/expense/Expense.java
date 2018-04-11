@@ -1,23 +1,29 @@
 package mullerge.personalaccountent.expense;
 
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.orm.SugarRecord;
 import com.orm.dsl.Column;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import mullerge.personalaccountent.month.Month;
 
-public class Expense extends SugarRecord implements Serializable{
+@IgnoreExtraProperties
+public class Expense implements Serializable{
 
     private double amount;
-    private Date date;
+    private long date;
     private String type;
     private String description;
-    @Column(name = "month")
-    private Month monthOfExpense;
     private String currency;
+    private String key;
 
     public double getAmount() {
         return amount;
@@ -27,12 +33,31 @@ public class Expense extends SugarRecord implements Serializable{
         this.amount = amount;
     }
 
-    public Date getDate() {
+
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(long dateMilis) {
+        this.date =dateMilis;
+    }
+
+    @Exclude
+    public Date getDateAsDate(){
+        return new Date(date);
+    }
+
+    @Exclude
+    public static Expense buildExpenseFromMap(Map<String,Object> map){
+        Expense result = new Expense();
+        result.setKey((String)map.get("key"));
+        result.setAmount(new Long((long)map.get("amount")).doubleValue());
+        result.setCurrency((String)map.get("currency"));
+        result.setDate((Long)map.get("date"));
+        result.setDescription((String)map.get("description"));
+        result.setType((String)map.get("type"));
+
+        return  result;
     }
 
     public String getType() {
@@ -51,19 +76,19 @@ public class Expense extends SugarRecord implements Serializable{
         this.description = description;
     }
 
-    public Month getMonthOfExpense() {
-        return monthOfExpense;
-    }
-
-    public void setMonthOfExpense(Month monthOfExpense) {
-        this.monthOfExpense = monthOfExpense;
-    }
-
     public String getCurrency() {
         return currency;
     }
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
