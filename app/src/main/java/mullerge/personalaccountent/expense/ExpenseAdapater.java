@@ -76,6 +76,9 @@ public class ExpenseAdapater extends RecyclerView.Adapter<ExpenseAdapater.Expens
     }
 
     public void updateList(){
+
+        expenses.sort( (e1,e2) -> e1.getDate() > e2.getDate() ? -1 : 1);
+
         notifyDataSetChanged();
     }
 

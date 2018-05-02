@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import mullerge.personalaccountent.dalFireBase.ExpenseRepo;
@@ -25,13 +26,16 @@ public class NewMonthReciever extends BroadcastReceiver{
 
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             scheduleNewMonthBroadcast();
+            System.out.println("LOG: BOOOOOOOT" + new Date().toString());
         }
+        else {
 
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.setTimeInMillis(System.currentTimeMillis());
+            Calendar currentDate = Calendar.getInstance();
+            currentDate.setTimeInMillis(System.currentTimeMillis());
 
-        if(currentDate.get(Calendar.DAY_OF_MONTH) == 1){
-            addNewMonth();
+            if (currentDate.get(Calendar.DAY_OF_MONTH) == 1) {
+                addNewMonth();
+            }
         }
     }
 
@@ -60,13 +64,10 @@ public class NewMonthReciever extends BroadcastReceiver{
         Intent intent = new Intent(context,NewMonthReciever.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(context,0,intent,0);
 
-        Calendar firstDayOfMonth = Calendar.getInstance();
-        firstDayOfMonth.setTimeInMillis(System.currentTimeMillis());
-        firstDayOfMonth.set(Calendar.MONTH,3);
-        firstDayOfMonth.set(Calendar.DAY_OF_MONTH, 0);
-        firstDayOfMonth.set(Calendar.HOUR_OF_DAY, 0);
+        Calendar startTime = Calendar.getInstance();
+        startTime.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.MINUTE) + 1);
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC,firstDayOfMonth.getTimeInMillis(),
+        alarmManager.setInexactRepeating(AlarmManager.RTC,startTime.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY,pIntent);
 
         //alarmManager.setRepeating(AlarmManager.RTC,System.currentTimeMillis(), 5000,pIntent);

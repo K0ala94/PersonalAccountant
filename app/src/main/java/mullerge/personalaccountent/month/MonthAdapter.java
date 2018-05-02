@@ -83,6 +83,13 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
     }
 
     public void updateList(){
+
+        months.sort((m1,m2) -> { if(m1.getYear() == m2.getYear()){
+            return m1.getMonth() > m2.getMonth() ? -1 : 1;
+        }
+            return m1.getYear() > m2.getYear() ? -1 : 1;
+        });
+
         notifyDataSetChanged();
     }
 
