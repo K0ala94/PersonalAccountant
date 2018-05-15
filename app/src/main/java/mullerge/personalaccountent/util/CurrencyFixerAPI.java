@@ -9,6 +9,6 @@ public interface CurrencyFixerAPI {
 
     @GET("latest?access_key=51489afc1da53411f2ba16e2ca5767b4" +
             "&base=EUR" +
-            "&symbols=GBP,USD,HUF")
+            "&symbols=GBP,USD,HRK,HUF")
     public Call<ResponseBody> getCurrencyValues();
 }

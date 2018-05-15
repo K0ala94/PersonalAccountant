@@ -89,16 +89,19 @@ public class CurrencyLoader {
                         double euroInHUF = Double.parseDouble((ratesObj.getString(Currency.HUF)));
                         double usdInHuf = 1 / Double.parseDouble(ratesObj.getString(Currency.USD))*euroInHUF;
                         double gbpInHuf = 1 /Double.parseDouble(ratesObj.getString(Currency.GBP)) *euroInHUF;
+                        double kunaInHuf = 1 /Double.parseDouble(ratesObj.getString(Currency.KUNA)) *euroInHUF;
 
                         loadedCurrencies.clear();
                         loadedCurrencies.put(Currency.EURO,new Currency(euroInHUF, Currency.EURO));
                         loadedCurrencies.put(Currency.HUF,new Currency(1, Currency.HUF));
                         loadedCurrencies.put(Currency.USD,new Currency(usdInHuf , Currency.USD));
                         loadedCurrencies.put(Currency.GBP,new Currency(gbpInHuf, Currency.GBP));
+                        loadedCurrencies.put(Currency.KUNA,new Currency(kunaInHuf, Currency.KUNA));
 
                         sp.edit().putFloat(Currency.EURO, (float)euroInHUF).apply();
                         sp.edit().putFloat(Currency.USD, (float)usdInHuf).apply();
                         sp.edit().putFloat(Currency.GBP,(float)gbpInHuf).apply();
+                        sp.edit().putFloat(Currency.KUNA, (float)kunaInHuf).apply();
 
                         lastCurrencyQuery = new Date().getTime();
                         sp.edit().putLong("last_currency_query", lastCurrencyQuery).apply();
@@ -132,6 +135,7 @@ public class CurrencyLoader {
         loadedCurrencies.put(Currency.EURO,new Currency(sp.getFloat(Currency.EURO, 0.0f), Currency.EURO));
         loadedCurrencies.put(Currency.USD,new Currency(sp.getFloat(Currency.USD, 0.0f), Currency.USD));
         loadedCurrencies.put(Currency.GBP,new Currency(sp.getFloat(Currency.GBP, 0.0f), Currency.GBP));
+        loadedCurrencies.put(Currency.KUNA,new Currency(sp.getFloat(Currency.KUNA, 0.0f), Currency.GBP));
     }
 
     public Map<String, Currency> getLoadedCurrencies() {

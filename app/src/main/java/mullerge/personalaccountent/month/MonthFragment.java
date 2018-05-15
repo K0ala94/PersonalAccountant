@@ -31,6 +31,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -174,10 +176,18 @@ public class MonthFragment extends Fragment {
         TextView eurTV = (TextView)exchangeRatesView.findViewById(R.id.er_eur);
         TextView usdTV = (TextView)exchangeRatesView.findViewById(R.id.er_usd);
         TextView gbpTV = (TextView)exchangeRatesView.findViewById(R.id.er_gbp);
+        TextView kunaTV = (TextView)exchangeRatesView.findViewById(R.id.er_kuna);
+
 
         eurTV.setText(String.valueOf(currencies.get(Currency.EURO).getRateToHuf()).substring(0,6) + "Ft");
         usdTV.setText(String.valueOf(currencies.get(Currency.USD).getRateToHuf()).substring(0,6) + "Ft");
         gbpTV.setText(String.valueOf(currencies.get(Currency.GBP).getRateToHuf()).substring(0,6) + "Ft");
+        if(String.valueOf(currencies.get(Currency.KUNA).getRateToHuf()).length() >= 6) {
+            kunaTV.setText(String.valueOf(currencies.get(Currency.KUNA).getRateToHuf()).substring(0, 6) + "Ft");
+        }
+        else {
+            kunaTV.setText("This exchange rate will be updated tomorrow");
+        }
 
         final PopupWindow exchangeRatesWindow = new PopupWindow(exchangeRatesView,
                                                         RecyclerView.LayoutParams.WRAP_CONTENT,

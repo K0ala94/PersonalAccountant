@@ -9,8 +9,9 @@ public class Currency implements Serializable {
     public static final String EURO = "EUR";
     public static final String USD = "USD";
     public static final String GBP = "GBP";
+    public static final String KUNA = "HRK";
 
-    public static final String[] CURRENCIES = {HUF, EURO, USD, GBP};
+    public static final String[] CURRENCIES = {HUF, EURO, USD, GBP, KUNA};
 
     private double rateToHuf;
     private String currenyName;
