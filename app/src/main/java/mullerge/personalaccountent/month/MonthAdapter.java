@@ -144,21 +144,22 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
         @Override
         public boolean onLongClick(View v) {
 
+            if(month.getLabel() == null || month.getLabel().isEmpty()) {
+                Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
-            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    vibrator.vibrate(50);
+                }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                //deprecated in API 26
-                vibrator.vibrate(50);
+                month.setSaving(new MonthDataCalculator().calculateSavings(month));
+
+                PopupWindow detailsWindow = createPopupWindow(v);
+                //detailsWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+                detailsWindow.showAsDropDown(v, 100, 0, Gravity.CENTER);
             }
-
-            month.setSaving(new MonthDataCalculator().calculateSavings(month));
-
-            PopupWindow detailsWindow = createPopupWindow(v);
-            //detailsWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
-            detailsWindow.showAsDropDown(v,100,0,Gravity.CENTER);
 
             return true;
         }

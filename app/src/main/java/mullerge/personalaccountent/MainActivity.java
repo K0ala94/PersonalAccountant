@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction =  fragmentManager.beginTransaction();
 
-        transaction.add(R.id.main_activity,new MonthFragment());
+        transaction.add(R.id.main_activity,new MonthFragment(), "month_fragment");
         transaction.commit();
 
         CurrencyLoader.getIntance(this).loadCurrencies();

@@ -3,6 +3,7 @@ package mullerge.personalaccountent.month;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +49,7 @@ import mullerge.personalaccountent.event.Event;
 import mullerge.personalaccountent.util.Currency;
 import mullerge.personalaccountent.util.CurrencyLoader;
 
-public class MonthFragment extends Fragment {
+public class MonthFragment extends Fragment implements CreateEventDialoge.NewEventListener {
 
     private RecyclerView recyclerView;
     private MonthAdapter adapter;
@@ -96,19 +98,10 @@ public class MonthFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Month newMonth = new Month();
-                Calendar now = Calendar.getInstance();
-                now.setTime(new Date());
-                newMonth.setMonth(now.get(Calendar.MONTH)-1);
-                newMonth.setYear(now.get(Calendar.YEAR));
-                newMonth.setIncome(450000);
-                newMonth.setLabel("Teszt");
 
-                monthRepo.saveMonth(newMonth);
-                expenseRepo.saveMonth(newMonth);
-
-    }
-});
+                new CreateEventDialoge().show(getActivity().getSupportFragmentManager(), null);
+            }
+        });
     }
 
     @Override
@@ -158,11 +151,34 @@ public class MonthFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
 
                 Month deletedMonth = adapter.getMonths().get(position);
-                monthRepo.deleteMonth(deletedMonth);
+                confirmDelete(deletedMonth).show();
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(deleteCallBack);
         touchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    public AlertDialog confirmDelete(Month deletedMonth)
+    {
+        AlertDialog deleteDialodge =new AlertDialog.Builder(getActivity())
+                .setTitle("Delete")
+                .setMessage("Are you sure you want to delete this item?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        monthRepo.deleteMonth(deletedMonth);
+                        dialog.dismiss();
+                    }
+
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+
+        return deleteDialodge;
     }
 
 
@@ -227,5 +243,20 @@ public class MonthFragment extends Fragment {
         }else{
             Toast.makeText(getContext(),"No calculator found on your device", Toast.LENGTH_LONG);
         }
+    }
+
+    @Override
+    public void onEventNameRecieved(String eventName) {
+
+        Month newMonth = new Month();
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+        newMonth.setMonth(now.get(Calendar.MONTH)-1);
+        newMonth.setYear(now.get(Calendar.YEAR));
+        newMonth.setIncome(450000);
+        newMonth.setLabel(eventName);
+
+        monthRepo.saveMonth(newMonth);
+        expenseRepo.saveMonth(newMonth);
     }
 }
