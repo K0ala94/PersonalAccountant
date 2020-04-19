@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PersonalAccountant.iml" filepath="$PROJECT_DIR$/PersonalAccountant.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/PersonalAccountant-app.iml" filepath="$PROJECT_DIR$/app/PersonalAccountant-app.iml" group="PersonalAccountant/app" />
+      <module fileurl="file://$PROJECT_DIR$/PersonalAccountant-git-PersonalAccountant.iml" filepath="$PROJECT_DIR$/PersonalAccountant-git-PersonalAccountant.iml" group="PersonalAccountant" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
